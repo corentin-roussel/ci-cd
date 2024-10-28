@@ -1,12 +1,9 @@
-FROM ubuntu:latest
+FROM debian:latest
 
-RUN apt update && apt install openssh-server sudo -y
-
-RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1010 test
-
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
 RUN echo 'root:root123' | chpasswd
-
-RUN service ssh start
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 EXPOSE 44
 
