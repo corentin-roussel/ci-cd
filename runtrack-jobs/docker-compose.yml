@@ -3,6 +3,10 @@ services:
     image: nginx:stable-perl
     depends_on:
       - ftp-server
+    ports:
+      - '8080:80'
+    volumes:
+      - 'nginx_ftp:/usr/share/nginx/html'
     restart: always
 
   ftp-server:
@@ -15,8 +19,7 @@ services:
       - '20-21:20-21/tcp'
       - '40000-40009:40000-40009/tcp' # Only needed for passive mode
     volumes:
-      - '/data:/home/user'
+      - 'nginx_ftp:/home/user'
 
-# volumes:
-#   nginx_ftp:
-#     driver: local
+volumes:
+  nginx_ftp:
