@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: nginx:stable-perl
+    depends_on:
+      - ftp-server
+    ports:
+      - '8080:80'
+    volumes:
+      - 'nginx_ftp:/usr/share/nginx/html'
+    restart: always
+
+  ftp-server:
+    container_name: my-ftp-server
+    environment:
+      - FTP_PASS=123
+      - FTP_USER=user
+    image: garethflowers/ftp-server
+    ports:
+      - '20-21:20-21/tcp'
+      - '40000-40009:40000-40009/tcp' # Only needed for passive mode
+    volumes:
+      - 'nginx_ftp:/home/user'
+
+volumes:
+  nginx_ftp:
