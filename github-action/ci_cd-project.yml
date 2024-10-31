@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: master
 
       - name: Compiler installation
         run: |
@@ -35,7 +33,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -45,11 +43,11 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t cppunit:${{ github.ref_name }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/cppunit:${{ github.ref_name }} .
 
       - name: Push images
         run: |
-          docker push cppunit:${{ github.ref_name }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/cppunit:${{ github.ref_name }}
 
   notify:
     runs-on: ubuntu-latest
@@ -69,6 +67,3 @@ jobs:
           curl -X POST -H 'Content-Type: application/json' \
           -d "{\"text\": \"$STATUS_MESSAGE\"}" \
           "$GOOGLE_CHAT_WEBHOOK"
-
-
-  
