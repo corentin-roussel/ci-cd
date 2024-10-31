@@ -1,4 +1,22 @@
 services:
+  registry:
+    image: registry:latest
+    ports:
+    - "5000:5000"
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - ./data:/data
+  app:
+    image: jc21/registry-ui
+    ports:
+      - 80:80
+    environment:
+      - REGISTRY_HOST=registry:5000
+      - REGISTRY_SSL=
+      - REGISTRY_DOMAIN=
+      - REGISTRY_STORAGE_DELETE_ENABLED=
+    restart: on-failure
   nginx:
     image: nginx:stable-perl
     depends_on:
